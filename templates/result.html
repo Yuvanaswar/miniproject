@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraud Detection Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Load Chart.js from jsDelivr -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h2>Fraud Detection Results</h2>
+        <p>Total Transactions: {{ total }}</p>
+        <p>Fraudulent Transactions: {{ fraud }}</p>
+        <p>Legitimate Transactions: {{ total - fraud }}</p>
+
+        <canvas id="fraudChart"></canvas>
+    </div>
+
+    <script>
+        window.onload = function () {
+            console.log("Page fully loaded, initializing chart...");
+
+            var ctx = document.getElementById('fraudChart');
+            if (!ctx) {
+                console.error("Canvas element not found!");
+                return;
+            }
+
+            var fraudChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Legitimate', 'Fraud'],
+                    datasets: [{
+                        data: [{{ total - fraud }}, {{ fraud }}],
+                        backgroundColor: ['#28a745', '#dc3545']
+                    }]
+                }
+            });
+        };
+    </script>
+</body>
+</html>

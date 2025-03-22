@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload CSV for Fraud Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Upload a CSV File to Train Model</h2>
+        <form id="upload-form">
+            <input type="file" id="file" required>
+            <button type="submit">Upload & Train</button>
+        </form>
+        <p id="status"></p>
+    </div>
+
+    <script>
+        document.getElementById("upload-form").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            var fileInput = document.getElementById("file");
+            var formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+
+            fetch("/upload", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("status").textContent = data.message;
+            })
+            .catch(error => {
+                document.getElementById("status").textContent = "Error uploading file";
+            });
+        });
+    </script>
+</body>
+</html>
